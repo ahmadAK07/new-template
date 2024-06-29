@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Grid Pattern (SVG)</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #svg-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .block {
+    fill: #4CAF50; /* Adjust block color */
+    stroke: #000; /* Border color */
+    stroke-width: 1; /* Border width */
+    transition: opacity 1s;
+  }
+</style>
+</head>
+<body>
+  <div id="svg-container">
+    <svg width="100%" height="100%" viewBox="0 0 800 800">
+      <!-- Interactive Blocks (to be added dynamically) -->
+    </svg>
+  </div>
+
+  <script>
+    document.addEventListener('mousemove', function(event) {
+      const container = document.getElementById('svg-container');
+      const rect = container.getBoundingClientRect();
+      const x = event.clientX - rect.left - 270;
+      const y = event.clientY - rect.top + 80;
+
+      if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+        return;
+      }
+
+      const xIndex = Math.floor(x / 96);
+      const yIndex = Math.floor(y / 160);
+
+      const rotation = Math.random() * 360; // Random rotation between 0 to 360 degrees
+
+      const block = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      block.setAttribute('x', `${96 * xIndex}`);
+      block.setAttribute('y', `${160 * yIndex}`);
+      block.setAttribute('width', '96');
+      block.setAttribute('height', '160');
+      block.setAttribute('transform', `rotate(${rotation} ${96 * xIndex + 48} ${160 * yIndex + 80})`); // Rotate around center of the block
+      block.classList.add('block');
+      container.querySelector('svg').appendChild(block);
+
+      // Remove block after animation completes
+      setTimeout(() => {
+        container.querySelector('svg').removeChild(block);
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
